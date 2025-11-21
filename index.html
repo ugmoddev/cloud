@@ -61,6 +61,43 @@
             z-index: 1;
         }
 
+        /* HEADER & SEARCH - CẢI TIẾN */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, rgba(25, 25, 45, 0.9), rgba(40, 40, 60, 0.9));
+            border-radius: 25px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        /* CSS MỚI: Ẩn header khi tab Bypass, Note hoặc Cài đặt được kích hoạt */
+        .hide-header .header {
+            display: none;
+        }
+
+        .header:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 45px rgba(0, 0, 0, 0.5);
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px; /* Giảm kích thước thanh màu vàng */
+            background: linear-gradient(to right, var(--primary), var(--secondary), var(--primary));
+            background-size: 200% 100%;
+            animation: shimmer 3s ease-in-out infinite;
         }
 
         @keyframes shimmer {
@@ -685,6 +722,14 @@
             transform: translateX(5px);
             border-color: var(--primary);
         }
+
+        /* RESPONSIVE DESIGN */
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 20px;
+                padding: 20px;
+            }
             
             .search-input.active {
                 width: 200px;
@@ -974,6 +1019,20 @@
                 <button onclick="closePlatformSelectModal()" style="padding: 8px 20px; border: none; border-radius: 8px; background: #555; color: white; margin-top: 20px; cursor: pointer; width: 100%;">Đóng</button>
             </div>
         </div>
+
+        <div class="container">
+            <div class="header">
+                <div class="dropdown">
+                    <span>Menu Điều hướng</span>
+                    <span>▼</span>
+                </div>
+                <div class="search-container">
+                    <input type="text" class="search-input" id="searchInput" placeholder="Tìm kiếm ứng dụng...">
+                    <div class="search-icon" id="searchIcon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                </div>
+            </div>
 
             
             <div id="home-tab" class="tab-content active">
@@ -1533,7 +1592,7 @@
             }, 3000);
         }
 
-        // Chức năng chuyển tab
+        // Chức năng chuyển tab - ĐÃ CẬP NHẬT
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(content => {
                 content.classList.remove('active');
@@ -1549,6 +1608,14 @@
             const activeNav = document.querySelector(`.nav-item[data-tab="${tabId}"]`);
             if (activeNav) {
                 activeNav.classList.add('active');
+            }
+            
+            // THÊM: Xử lý ẩn/hiện header dựa trên tab được chọn
+            const container = document.querySelector('.container');
+            if (tabId === 'bypass-tab' || tabId === 'note-tab' || tabId === 'settings-tab') {
+                container.classList.add('hide-header');
+            } else {
+                container.classList.remove('hide-header');
             }
         }
 
@@ -1693,7 +1760,4 @@
     });
 </script>
 </body>
-
 </html>
-
-
